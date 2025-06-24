@@ -1,16 +1,27 @@
 ---
 import "../css/Header.css";
-import type { Phone } from "../lib/types/Header";
-import { fetchActivePhones } from "../lib/api/Header";
+import type { Phone, SiteSettings } from "../lib/types/Header";
+import { fetchActivePhones, fetchSiteSettings } from "../lib/api/Header";
 
 let phoneNumber = "";
+let logoUrl = "";
+let logoAlt = "";
 
 try {
   const activePhones = await fetchActivePhones();
   const activePhone = activePhones.length > 0 ? activePhones[0] : null;
-  phoneNumber = activePhone ? activePhone.number : "";
+  phoneNumber = activePhone ? activePhone.number : "1234567890";
 } catch (e) {
   phoneNumber = "";
+}
+
+try {
+  const siteSettings: SiteSettings = await fetchSiteSettings();
+  logoUrl = siteSettings.logo.file_url;
+  logoAlt = siteSettings.logo.alt_text || "Logo";
+} catch (e) {
+  logoUrl = "";
+  logoAlt = "Logo";
 }
 ---
 
@@ -37,10 +48,7 @@ try {
     <div class="hero-section">
       <!-- Logo -->
       <div class="logo">
-        <img
-          src="https://img.freepik.com/vector-mien-phi/bird-colorful-logo-gradient-vector_343694-1365.jpg?semt=ais_hybrid&w=740"
-          alt="Logo"
-        />
+        <img src={logoUrl} alt={logoAlt} />
       </div>
 
       <!-- Tìm kiếm -->
@@ -54,7 +62,7 @@ try {
         <div class="hotline-icon">
           <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-        <span class="hotline-text">0935 754 586</span>
+        <span class="hotline-text">{phoneNumber}</span>
       </div>
     </div>
 
