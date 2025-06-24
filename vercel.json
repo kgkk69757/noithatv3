@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "src/pages/**/*.astro": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "BASE_API_URL": "https://tshy.io.vn/admin/api"
+  }
+}

@@ -33,12 +33,33 @@ export async function fetchSiteSettings(): Promise<SiteSettings> {
 
 export async function fetchCompanyInfo(): Promise<CompanyInfo> {
   const apiUrl = `${import.meta.env.BASE_API_URL}/company-info`;
-  const res = await fetch(apiUrl);
-  const json: CompanyInfoApiResponse = await res.json();
+  
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+    
+    const res = await fetch(apiUrl, {
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    clearTimeout(timeoutId);
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
+    const json: CompanyInfoApiResponse = await res.json();
 
-  if (json.success && json.data) {
-    return json.data;
-  } else {
-    throw new Error("Invalid Company Info API response");
+    if (json.success && json.data) {
+      return json.data;
+    } else {
+      throw new Error("Invalid Company Info API response");
+    }
+  } catch (error) {
+    console.error('Error fetching company info:', error);
+    throw error;
   }
 }
