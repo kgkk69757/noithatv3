@@ -1,0 +1,29 @@
+---
+type Baiviet = {
+  id: number;
+  tieudebaiviet: string;
+  slug: string;
+  img_url: string;
+  img_alt: string;
+  meta_title: string;
+  meta_description: string;
+  noidung: string;
+  thu_tu_hien_thi: number;
+  created_at: string;
+  created_at_full: string;
+  updated_at: string;
+};
+
+const response = await fetch("https://tshy.io.vn/admin/api/baiviets");
+const json = await response.json();
+const baiviets: Baiviet[] = json.data;
+---
+
+<ul>
+  {baiviets.map((bv: Baiviet) => (
+    <li>
+      <h2>{bv.tieudebaiviet}</h2>
+      <img src={bv.img_url} alt={bv.img_alt} />
+    </li>
+  ))}
+</ul>
