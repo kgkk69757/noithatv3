@@ -1,6 +1,7 @@
 import type { Phone, PhoneApiResponse } from "../types/Header";
+
 export async function fetchActivePhones(): Promise<Phone[]> {
-  const apiUrl = `${process.env.PHONES_API_URL as string}/phones`;
+  const apiUrl = `${import.meta.env.BASE_API_URL}/phones`; // ✅ Dùng đúng biến
   const res = await fetch(apiUrl);
   const json: PhoneApiResponse = await res.json();
 
@@ -10,8 +11,3 @@ export async function fetchActivePhones(): Promise<Phone[]> {
     throw new Error("Invalid API response");
   }
 }
-
-// Ví dụ sử dụng
-fetchActivePhones()
-  .then((activePhones) => console.log("Active phones:", activePhones))
-  .catch((error) => console.error(error));
